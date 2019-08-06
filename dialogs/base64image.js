@@ -105,19 +105,30 @@ CKEDITOR.dialog.add("base64imageDialog", function(editor){
 			/* Read file and load preview */
 			var fileI = t.getContentElement("tab-source", "file");
 			var n = null;
+			var filter = getConfig('filter', false);
 			try { n = fileI.getInputElement().$; } catch(e) { n = null; }
 			if(n && "files" in n && n.files && n.files.length > 0 && n.files[0]) {
-				if("type" in n.files[0] && !n.files[0].type.match("image.*")) return;
-				if(!FileReader) return;
-				imgPreview.getElement().setHtml("Loading...");
-				var fr = new FileReader();
-				fr.onload = (function(f) { return function(e) {
-					imgPreview.getElement().setHtml("");
-					imagePreviewLoad(e.target.result);
-				}; })(n.files[0]);
-				fr.onerror = function(){ imgPreview.getElement().setHtml(""); };
-				fr.onabort = function(){ imgPreview.getElement().setHtml(""); };
-				fr.readAsDataURL(n.files[0]);
+				if (filter && n.files[0].type && filter.indexOf(n.files[0].type) == -1) {
+					imgPreview.getElement().setHtml("image not suported");
+				} else {
+					if ("type" in n.files[0] && !n.files[0].type.match("image.*")) return;
+					if (!FileReader) return;
+					imgPreview.getElement().setHtml("Loading...");
+					var fr = new FileReader();
+					fr.onload = (function (f) {
+						return function (e) {
+							imgPreview.getElement().setHtml("");
+							imagePreviewLoad(e.target.result);
+						};
+					})(n.files[0]);
+					fr.onerror = function () {
+						imgPreview.getElement().setHtml("");
+					};
+					fr.onabort = function () {
+						imgPreview.getElement().setHtml("");
+					};
+					fr.readAsDataURL(n.files[0]);
+				}
 			}
 		}
 	};
