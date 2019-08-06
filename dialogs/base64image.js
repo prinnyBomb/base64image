@@ -113,7 +113,6 @@ CKEDITOR.dialog.add("base64imageDialog", function(editor){
 			var n = null;
 			var filter = getConfig('filter', false);
 			try { n = fileI.getInputElement().$; } catch(e) { n = null; }
-			console.log(filter);
 			if(n && "files" in n && n.files && n.files.length > 0 && n.files[0]) {
 				if (filter && n.files[0].type && filter.indexOf(n.files[0].type) == -1) {
 					imgPreview.getElement().setHtml("image not suported");
